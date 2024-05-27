@@ -10,19 +10,26 @@ export class App extends Component {
   state = {
     contacts: initiatContacts,
   };
-  DeleteNumber = numberId => {
-    console.log(numberId);
+
+  addPhoneNumber = newPhoneNumber => {
+    this.setState(prewState => ({
+      contacts: [...prewState.contacts, newPhoneNumber],
+    }));
+  };
+
+  deleteNumber = numberId => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => numberId !== contact.id),
     }));
   };
+
   render() {
     return (
       <Layout>
-        <PhoneForm />
+        <PhoneForm onSave={this.addPhoneNumber} />
         <Contacts
           ContactList={this.state.contacts}
-          onDelete={this.DeleteNumber}
+          onDelete={this.deleteNumber}
         />
         <GlobalStyled />
       </Layout>

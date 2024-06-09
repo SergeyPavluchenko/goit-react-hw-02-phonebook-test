@@ -8,6 +8,10 @@ const PhoneSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
+  number: Yup.number()
+    .min(6, 'To Short!')
+    .positive('Required')
+    .required('Required'),
 });
 
 export const PhoneForm = ({ onSave }) => {
@@ -16,15 +20,15 @@ export const PhoneForm = ({ onSave }) => {
       <h1>Phonebook</h1>
       <Formik
         initialValues={{
-          contacts: [],
           name: '',
+          number: '',
         }}
-        onSubmit={values => {
+        onSubmit={(values, actions) => {
           onSave({
             ...values,
             id: nanoid(),
           });
-          console.log(values);
+          actions.resetForm();
         }}
         validationSchema={PhoneSchema}
       >
@@ -37,6 +41,16 @@ export const PhoneForm = ({ onSave }) => {
             required
           />
           <ErrorMessage name="name" />
+
+          <label>Number</label>
+          <Field
+            name="number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+          />
+          <ErrorMessage name="number" />
+
           <ButtonContact type="submit">Add contact</ButtonContact>
         </Form>
       </Formik>

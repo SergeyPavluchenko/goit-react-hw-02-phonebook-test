@@ -10,8 +10,24 @@ import { PageStyle } from './PageStyle';
 
 export class App extends Component {
   state = {
-    contacts: initiatContacts,
+    contacts: [],
     filter: '',
+  };
+
+  componentDidMount = () => {
+    const getContacts = localStorage.getItem('contacts');
+    if (getContacts !== null) {
+      const parseContact = JSON.parse(getContacts);
+      this.setState({ contacts: parseContact });
+      return;
+    }
+    this.setState({ contacts: initiatContacts });
+  };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevState !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
   };
 
   addPhoneNumber = newPhoneNumber => {
